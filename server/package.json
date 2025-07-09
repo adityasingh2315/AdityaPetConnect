@@ -1,4 +1,7 @@
 {
+  "name": "adityapetconnect",
+  "version": "1.0.0",
+  "description": "Aditya's personalized pet adoption backend API",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
