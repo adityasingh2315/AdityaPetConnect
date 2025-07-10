@@ -13,9 +13,9 @@ function AdoptForm(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isEmailValid = (email) => {
-    const emailPattern = /^[a-zA-Z0-9._-]+@gmail\.com$/;
-    return emailPattern.test(email);
-  };
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailPattern.test(email);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();

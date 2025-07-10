@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { saveForm, getAdoptForms, deleteForm, deleteAllRequests } = require('../Controller/AdoptFormController');
+const { saveForm, getAdoptForms } = require('../Controller/AdoptFormController');
 
+// POST route to save form
 router.post('/save', saveForm);
-router.get('/getForms', getAdoptForms);
-router.delete('/reject/:id', deleteForm);
-router.delete('/delete/many/:id', deleteAllRequests);
+
+// GET route to fetch all forms (optional, can be used for admin)
+router.get('/all', getAdoptForms);
 
 module.exports = router;

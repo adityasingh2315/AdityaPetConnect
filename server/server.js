@@ -1,37 +1,41 @@
-const path = require('path');
-console.log("ENV FILE PATH DEBUG:", path.resolve(__dirname, '.env'));
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const path = require("path");
 
-require('dotenv').config();
-console.log("Debug: Mongo URI =", process.env.mongooseURL);
-
-const express = require('express');
-const mongoose = require('mongoose');
-const petRouter = require('./Routes/PetRoute');
-const AdoptFormRoute = require('./Routes/AdoptFormRoute');
-const AdminRoute = require('./Routes/AdminRoute');
-const cors = require('cors');
-
+dotenv.config();
 const app = express();
 
+// Middlewares
 app.use(cors());
+app.use(express.json());
 
+// Static folder for uploaded images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Connect MongoDB
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("✅ Connected to DB"))
+.catch((err) => console.error("❌ MongoDB connection error:", err));
 
-app.use(petRouter);
-app.use('/form', AdoptFormRoute);
-app.use('/admin', AdminRoute);
+// Routes
+const petRoutes = require('./Routes/PetRoute');
+const adoptFormRoutes = require('./Routes/AdoptFormRoute');
 
-mongoose.connect(process.env.mongooseURL)
-    .then(() => {
-        console.log('Connected to DB');
-        const PORT = process.env.PORT || 4000;
-        app.listen(PORT, () => {
-            console.log(`Listening on port ${PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.error("MongoDB connection error:", err);
-    });
+app.use('/', petRoutes);         // for /services, /approvedPets etc
+app.use('/form', adoptFormRoutes);  // for /form/save
+
+// Root route
+app.get('/', (req, res) => {
+  res.send("Welcome to AdityaPetConnect Backend!");
+});
+
+// Start server
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});

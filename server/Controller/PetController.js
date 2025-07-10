@@ -1,6 +1,16 @@
 const Pet = require('../Model/PetModel');
 const fs = require('fs');
 const path = require('path');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,     // lci2023003@iiitl.ac.in
+    pass: process.env.EMAIL_PASS      // Gmail App Password
+  }
+});
 
 const postPetRequest = async (req, res) => {
   try {
@@ -19,8 +29,30 @@ const postPetRequest = async (req, res) => {
       status: 'Pending'
     });
 
+    // Construct email body
+    const mailOptions = {
+      from: `"AdityaPetConnect" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      subject: `🐾 New Pet Posted for Adoption - ${name}`,
+      html: `
+        <h2>New Pet Posted for Adoption</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Age:</strong> ${age}</p>
+        <p><strong>Type:</strong> ${type}</p>
+        <p><strong>Location:</strong> ${area}</p>
+        <p><strong>Justification:</strong> ${justification}</p>
+        <p><strong>Owner Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Image Filename:</strong> ${filename}</p>
+      `
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
     res.status(200).json(pet);
   } catch (error) {
+    console.error("❌ Error in postPetRequest:", error);
     res.status(500).json({ error: error.message });
   }
 };

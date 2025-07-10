@@ -14,23 +14,23 @@ const Footer = (props) => {
       <div className="below-footer">
         <p>
           You can reach me at{" "}
-          <a className="mail-links" href="mailto:kashifkzmi5@gmail.com">
-            kashifkzmi5@gmail.com
+          <a className="mail-links" href="mailto:ks3406800@gmail.com">
+            ks3406800@gmail.com
           </a>
         </p>
         <p>
           <a
             className="contact-links"
-            href="https://www.linkedin.com/in/kashiekzmi/"
+            href="https://www.linkedin.com/in/aditya-singh-46bb5a2a3/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i className="fa fa-linkedin-square"></i> Linkedin
+            <i className="fa fa-linkedin-square"></i> LinkedIn
           </a>
           &nbsp;&nbsp;|&nbsp;&nbsp;
           <a
             className="contact-links"
-            href="https://github.com/KaShiekzmi"
+            href="https://github.com/adityasingh2315"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -39,7 +39,7 @@ const Footer = (props) => {
           &nbsp;&nbsp;|&nbsp;&nbsp;
           <a
             className="contact-links"
-            href="https://www.instagram.com/kaxhie_x/"
+            href="https://www.instagram.com/adit47484/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -48,14 +48,14 @@ const Footer = (props) => {
           &nbsp;&nbsp;|&nbsp;&nbsp;
           <a
             className="contact-links"
-            href="https://api.whatsapp.com/qr/GXRHM7PEPNOKA1?autoload=1&app_absent=0"
+            href="https://wa.me/917858937955"
             target="_blank"
             rel="noopener noreferrer"
           >
             <i className="fa fa-whatsapp"></i> WhatsApp
           </a>
         </p>
-        <p>&copy; 2023 Kashif Abbas Kazmi</p>
+        <p>&copy; 2025 Aditya Singh</p>
       </div>
     </footer>
   );

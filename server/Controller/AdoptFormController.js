@@ -1,57 +1,56 @@
-
-const AdoptForm = require('../Model/AdoptFormModel')
-const express = require('express')
+const AdoptFormModel = require('../Model/adoptFormModel');
+const nodemailer = require('nodemailer');
 
 const saveForm = async (req, res) => {
-    try {
-        const { email, livingSituation, phoneNo, previousExperience, familyComposition, petId } = req.body
-        const form = await AdoptForm.create({ email, livingSituation, phoneNo, previousExperience, familyComposition, petId })
+  try {
+    const formData = new AdoptFormModel(req.body);
+    await formData.save();
 
-        res.status(200).json(form)
-    } catch (err) {
-        res.status(400).json({ message: err.message })
-    }
-}
+    // Send Email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `"AdityaPetConnect" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      subject: `🐾 New Adoption Request for Pet ID: ${req.body.petId}`,
+      text: `
+        A new adoption request has been submitted!
+
+        📧 Email: ${req.body.email}
+        📞 Phone: ${req.body.phoneNo}
+        🏠 Living Situation: ${req.body.livingSituation}
+        🐕 Experience: ${req.body.previousExperience}
+        👨‍👩‍👧‍👦 Other Pets/Family: ${req.body.familyComposition}
+        🆔 Pet ID: ${req.body.petId}
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(201).json({ message: 'Form saved and email sent!' });
+
+  } catch (error) {
+    console.error("❌ Error in saveForm:", error);
+    res.status(500).json({ error: 'Form save or email failed' });
+  }
+};
 
 const getAdoptForms = async (req, res) => {
-    try {
-        const forms = await AdoptForm.find().sort({ createdAt: -1 });
-        res.status(200).json(forms)
-    } catch (err) {
-        res.status(400).json({ message: err.message })
-    }
-}
-
-const deleteForm = async (req, res) => {
-    try {
-        const { id } = req.params
-        const form = await AdoptForm.findByIdAndDelete(id)
-        if (!form) {
-            return res.status(404).json({ message: 'Form not found' })
-        }
-        res.status(200).json({ message: 'Form deleted successfully' })
-    } catch (err) {
-        res.status(400).json({ message: err.message })
-    }
-}
-
-const deleteAllRequests = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const result = await AdoptForm.deleteMany({ petId: id });
-        if (result.deletedCount === 0) {
-            console.log("Forms not found");
-            return res.status(404).json({ error: 'Forms not found' });
-        }
-        res.status(200).json({ message: 'Forms deleted successfully' });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  try {
+    const forms = await AdoptFormModel.find();
+    res.status(200).json(forms);
+  } catch (error) {
+    console.error("❌ Error in getAdoptForms:", error);
+    res.status(500).json({ error: 'Failed to fetch forms' });
+  }
 };
 
 module.exports = {
-    saveForm,
-    getAdoptForms,
-    deleteForm,
-    deleteAllRequests
-}
+  saveForm,
+  getAdoptForms,
+};

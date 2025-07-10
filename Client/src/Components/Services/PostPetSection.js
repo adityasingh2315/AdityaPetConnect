@@ -29,10 +29,10 @@ const PostPetSection = () => {
     setShowPopup(!showPopup);
   };
 
-  const isEmailValid = (email) => {
-    const emailPattern = /^[a-zA-Z0-9._-]+@gmail\.com$/;
-    return emailPattern.test(email);
-  };
+ const isEmailValid = (email) => {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailPattern.test(email);
+};
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
